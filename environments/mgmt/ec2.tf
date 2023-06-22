@@ -12,11 +12,12 @@ resource "aws_security_group" "ec2_mgmt" {
   dynamic "ingress" {
     for_each = [80, 4444]
     content {
-      description = "HTTP access"
-      from_port   = ingress.value
-      to_port     = ingress.value
-      protocol    = "tcp"
-      cidr_blocks = [local.vpc_cidr]
+      description     = "HTTP access"
+      from_port       = ingress.value
+      to_port         = ingress.value
+      protocol        = "tcp"
+      security_groups = [module.alb.security_group_id]
+      cidr_blocks     = [local.vpc_cidr]
     }
   }
   egress {
