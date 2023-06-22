@@ -39,6 +39,28 @@ data "aws_ami" "amazon-linux-2" {
   }
 }
 
+data "aws_ami" "octopus" {
+  most_recent = true
+  owners      = [local.aws_account]
+  filter {
+    name   = "name"
+    values = ["Octopus"]
+  }
+}
+
+data "aws_ami" "teamcity" {
+  most_recent = true
+  owners      = [local.aws_account]
+  filter {
+    name   = "name"
+    values = ["TeamCity"]
+  }
+}
+
+data "aws_iam_policy" "AmazonSSMManagedInstanceCore" {
+  name = "AmazonSSMManagedInstanceCore"
+}
+
 ### Handy locals
 locals {
   zone_names      = slice(data.aws_availability_zones.aws-azs.names, 0, var.total_azs)
