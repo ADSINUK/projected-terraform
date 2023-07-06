@@ -12,6 +12,35 @@ data "terraform_remote_state" "mgmt" {
 # Availability zones
 data "aws_availability_zones" "aws-azs" {}
 
+data "aws_ami" "admin" {
+  most_recent = true
+  owners      = [local.aws_account]
+  filter {
+    name   = "name"
+    values = ["dev-admin"]
+  }
+}
+data "aws_ami" "api" {
+  most_recent = true
+  owners      = [local.aws_account]
+  filter {
+    name   = "name"
+    values = ["dev-api"]
+  }
+}
+data "aws_ami" "app" {
+  most_recent = true
+  owners      = [local.aws_account]
+  filter {
+    name   = "name"
+    values = ["dev-app"]
+  }
+}
+
+data "aws_iam_policy" "AmazonSSMManagedInstanceCore" {
+  name = "AmazonSSMManagedInstanceCore"
+}
+
 ### Handy locals
 locals {
   zone_names = slice(data.aws_availability_zones.aws-azs.names, 0, var.total_azs)
