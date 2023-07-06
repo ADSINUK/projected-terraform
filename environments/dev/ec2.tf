@@ -16,11 +16,12 @@ resource "aws_security_group" "ec2" {
     }
   }
   ingress {
-    description = "HTTP access"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = [local.mgmt_vpc_cidr]
+    description     = "HTTP access"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [module.alb.security_group_id]
+    cidr_blocks     = [local.mgmt_vpc_cidr]
   }
   egress {
     from_port   = 0
