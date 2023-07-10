@@ -215,7 +215,7 @@ resource "aws_instance" "openvpn" {
   monitoring           = var.enable_detailed_monitoring
   ebs_optimized        = var.ebs_optimized
   root_block_device {
-    volume_type = "gp2"
+    volume_type = "gp3"
     volume_size = var.root_ebs_size
     encrypted   = var.encrypt_ebs
     kms_key_id  = var.kms_key_id != null ? var.kms_key_id : var.encrypt_ebs ? aws_kms_key.ebs-key[0].arn : null
