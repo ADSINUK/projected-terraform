@@ -11,21 +11,13 @@ module "alb" {
   create_security_group      = true
   security_group_name        = "${local.basename}-alb-sg"
   security_group_rules = {
-    ingress_https = {
-      type        = "ingress"
-      from_port   = 443
-      to_port     = 443
-      protocol    = "tcp"
-      description = "HTTPS web traffic"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    ingress_http = {
-      type        = "ingress"
-      from_port   = 80
-      to_port     = 80
-      protocol    = "tcp"
-      description = "HTTP web traffic"
-      cidr_blocks = ["0.0.0.0/0"]
+    cloudfront = {
+      type            = "ingress"
+      from_port       = 80
+      to_port         = 80
+      protocol        = "tcp"
+      description     = "CF web traffic"
+      prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront.id]
     }
     egress_vpc = {
       type        = "egress"
@@ -39,18 +31,6 @@ module "alb" {
     port        = 80
     protocol    = "HTTP"
     action_type = "fixed-response"
-    fixed_response = {
-      content_type = "text/plain"
-      status_code  = "404"
-    }
-  }]
-  https_listeners = [{
-    port               = 443
-    protocol           = "HTTPS"
-    target_group_index = 0
-    certificate_arn    = data.terraform_remote_state.mgmt.outputs.acm.certificate_arn
-    ssl_policy         = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-    action_type        = "fixed-response"
     fixed_response = {
       content_type = "text/plain"
       status_code  = "404"
@@ -130,23 +110,10 @@ module "alb" {
       }
     },
   ]
-  http_tcp_listener_rules = [{
-    http_tcp_listener_index = 0
-    priority                = 1
-    actions = [{
-      type        = "redirect"
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }]
-    conditions = [{
-      host_headers = ["*.projected.ai"]
-    }]
-  }]
-  https_listener_rules = [
+  http_tcp_listener_rules = [
     {
-      https_listener_index = 0
-      priority             = 1
+      http_tcp_listener_index = 0
+      priority                = 1
       actions = [{
         type               = "forward"
         target_group_index = 0
@@ -156,8 +123,8 @@ module "alb" {
       }]
     },
     {
-      https_listener_index = 0
-      priority             = 2
+      http_tcp_listener_index = 0
+      priority                = 2
       actions = [{
         type               = "forward"
         target_group_index = 1
@@ -167,8 +134,8 @@ module "alb" {
       }]
     },
     {
-      https_listener_index = 0
-      priority             = 3
+      http_tcp_listener_index = 0
+      priority                = 3
       actions = [{
         type               = "forward"
         target_group_index = 2

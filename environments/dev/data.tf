@@ -41,6 +41,10 @@ data "aws_iam_policy" "AmazonSSMManagedInstanceCore" {
   name = "AmazonSSMManagedInstanceCore"
 }
 
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 ### Handy locals
 locals {
   zone_names = slice(data.aws_availability_zones.aws-azs.names, 0, var.total_azs)
