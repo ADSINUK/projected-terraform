@@ -27,8 +27,7 @@ module "cloudfront" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
-    headers                = ["*"]
-    cookies_forward        = "all"
-    query_string           = true
+    cache_policy_id        = data.aws_cloudfront_cache_policy.CachingOptimized.id
+    use_forwarded_values   = false
   }
 }

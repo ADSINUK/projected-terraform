@@ -45,6 +45,10 @@ data "aws_ec2_managed_prefix_list" "cloudfront" {
   name = "com.amazonaws.global.cloudfront.origin-facing"
 }
 
+data "aws_cloudfront_cache_policy" "CachingOptimized" {
+  name = "Managed-CachingOptimized"
+}
+
 ### Handy locals
 locals {
   zone_names = slice(data.aws_availability_zones.aws-azs.names, 0, var.total_azs)
