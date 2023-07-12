@@ -49,6 +49,10 @@ data "aws_cloudfront_cache_policy" "CachingOptimized" {
   name = "Managed-CachingOptimized"
 }
 
+data "aws_cloudfront_origin_request_policy" "Managed-AllViewer" {
+  name = "Managed-AllViewer"
+}
+
 ### Handy locals
 locals {
   zone_names = slice(data.aws_availability_zones.aws-azs.names, 0, var.total_azs)

@@ -23,11 +23,12 @@ module "cloudfront" {
     }
   }
   default_cache_behavior = {
-    target_origin_id       = "ELB-${split(".", module.alb.lb_dns_name)[0]}"
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["GET", "HEAD"]
-    cache_policy_id        = data.aws_cloudfront_cache_policy.CachingOptimized.id
-    use_forwarded_values   = false
+    target_origin_id         = "ELB-${split(".", module.alb.lb_dns_name)[0]}"
+    viewer_protocol_policy   = "redirect-to-https"
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    cache_policy_id          = data.aws_cloudfront_cache_policy.CachingOptimized.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.Managed-AllViewer.id
+    use_forwarded_values     = false
   }
 }
